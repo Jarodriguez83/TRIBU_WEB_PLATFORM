@@ -1,0 +1,56 @@
+# ENTORNO VIRTUAL
+.venv/
+venv/
+env/
+
+# VARIABLES DE ENTORNO Y CONFIGURACIÓN
+.env
+.env.local
+.env.production
+.env.staging
+
+# PYTHON 
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+
+#DISTRIBUCIÓN Y EMPAQUETADO  
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+
+# PYTEST Y COBERTURA 
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# IDES Y EDITORES
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# SISTEMA OPERATIVO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# LOGS
+*.log
+logs/
+
+# ARCHIVOS TEMPORALES Y DE SUBIDA
+*.tmp
+*.temp
+/app/static/uploads/
+
+# SUPABASE LOCAL
+.supabase/
+supabase/.branches/
+supabase/.temp/
