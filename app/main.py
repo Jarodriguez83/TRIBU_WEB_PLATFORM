@@ -43,3 +43,24 @@ app.mount(
     )
 
 # REGISTRO DE ROUTERS
+    # RUTAS PÚBLICAS    
+
+    # RUTAS DE AUTENTICACIÓN
+
+    # RUTAS DE PRODUCTOS
+
+    # RUTAS DE PEDIDOS
+
+    # RUTAS DE PAGOS
+
+    # RUTAS DE ADMINISTRACIÓN
+
+    # RUTA DE SALUD - VERIFICACIÓN DE QUE LA APLICACIÓN ESTÁ FUNCIONANDO
+@app.get("/health", tags=["SISTEMA"])
+async def health_check():
+    return {
+        "status": "OK", 
+        "message": "TRIBU STORE API IS RUNNING!", 
+        "version": "0.1.0", 
+        "environment": settings.ENVIRONMENT
+        }
