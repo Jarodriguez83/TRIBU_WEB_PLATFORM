@@ -1,7 +1,6 @@
 # IMPORTACIONES
-from multiprocessing.util import info
 from pydantic_settings import BaseSettings
-from pydantic import field_validator
+from pydantic import field_validator, ValidationInfo
 from typing import Literal
 from functools import lru_cache
 
@@ -61,7 +60,7 @@ class Settings(BaseSettings):
     # VALIDADORES 
     @field_validator("SECRET_KEY", "JWT_SECRET_KEY", "SESSION_SECRET_KEY")
     @classmethod
-    def validar_claves_seguras(cls, v: str, info) -> str:
+    def validar_claves_seguras(cls, v: str, info: ValidationInfo) -> str:
         if len(v) < 32:
             raise ValueError(
                 f"{info.field_name} DEBE TENER AL MENOS 32 CARACTERES PARA SER SEGURO.")
@@ -76,9 +75,9 @@ class Settings(BaseSettings):
     
     @field_validator("WOMPI_BASE_URL")
     @classmethod
-    def validar_wompi_base_url(cls, v: str) -> str:
+    def validar_wompi_base_url(cls, v: str, info: ValidationInfo) -> str:
         # SI USA SANDBOX O PRODUCCIÓN
-        environment = info.data.get("ENVIRONMENT")
+        environment = info.data.get("ENVIRONMENT") if info.data else None
         if environment == "production" and "sandbox" in v:
             raise ValueError("WOMPI_BASE_URL NO PUEDE USAR EL ENDPOINT DE SANDBOX EN PRODUCCIÓN.")
         return v
