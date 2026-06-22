@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Carrito | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section cart-section">
+    <div class="container">
+        <h1 class="cart-title">TU CARRITO</h1>
+        
+        {% if error %}
+            <div class="alert alert-danger">
+                <i class="fa-solid fa-circle-exclamation"></i> {{ error }}
+            </div>
+        {% endif %}
+
+        <!-- Carrito Vacío -->
+        <div id="cart-empty-view" class="empty-state" style="display: none;">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <h3>Tu carrito está vacío</h3>
+            <p>Parece que aún no has agregado ninguna prenda de nuestra colección.</p>
+            <a href="/catalogo" class="btn btn-primary">Explorar Catálogo</a>
+        </div>
+
+        <!-- Carrito con Contenido -->
+        <div id="cart-content-view" class="cart-grid" style="display: none;">
+            <!-- Listado de Artículos (Izquierda) -->
+            <div class="cart-items-container glass-panel" id="cart-items-list">
+                <!-- Se inyecta dinámicamente con JS -->
+            </div>
+
+            <!-- Resumen de Pedido (Derecha) -->
+            <div class="cart-summary-container">
+                <div class="summary-box glass-panel">
+                    <h3>RESUMEN DE COMPRA</h3>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="summary-subtotal">$0 COP</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Envío:</span>
+                        <span id="summary-shipping">Calculado en el checkout</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Total estimado:</span>
+                        <span id="summary-total">$0 COP</span>
+                    </div>
+                    
+                    <div class="summary-actions">
+                        <a href="/checkout" class="btn btn-primary btn-glow btn-block" id="btn-proceed-checkout">
+                            Procesar Compra <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="/catalogo" class="btn btn-secondary btn-block">Seguir Comprando</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

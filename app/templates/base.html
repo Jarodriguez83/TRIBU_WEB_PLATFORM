@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TRIBU | Streetwear Unisex{% endblock %}</title>
+    
+    <!-- Meta SEO -->
+    <meta name="description" content="TRIBU es una marca colombiana de ropa urbana y streetwear unisex nacida en 2023. Chaquetas, hoodies, gorras y más prendas exclusivas de alto nivel.">
+    <meta name="author" content="TRIBU STORE">
+    
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome para Iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Estilos de TRIBU -->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/tribu.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Notificaciones Flotantes -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Barra de Navegación -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="brand-logo" id="nav-brand">TRIBU</a>
+            
+            <!-- Menú Escritorio -->
+            <nav class="nav-menu" id="nav-menu-desktop">
+                <a href="/" class="nav-link">Inicio</a>
+                <a href="/catalogo" class="nav-link">Colecciones</a>
+                {% if user %}
+                    <a href="/perfil" class="nav-link">Mi Cuenta</a>
+                    {% if user.rol == 'admin' %}
+                        <a href="/admin/dashboard" class="nav-link admin-tag"><i class="fa-solid fa-screwdriver-wrench"></i> Admin</a>
+                    {% endif %}
+                    <a href="/auth/logout" class="nav-link btn-logout">Salir</a>
+                {% else %}
+                    <a href="/auth/login" class="nav-link btn-login">Ingresar</a>
+                {% endif %}
+            </nav>
+            
+            <!-- Acciones de Usuario (Carrito siempre visible) -->
+            <div class="nav-actions">
+                <a href="/carrito" class="cart-icon-container" id="nav-cart">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </a>
+                
+                <!-- Hamburguesa móvil -->
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menú">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú Móvil Lateral -->
+    <div class="mobile-drawer" id="mobile-drawer">
+        <div class="drawer-header">
+            <span class="brand-logo">TRIBU</span>
+            <button class="drawer-close" id="drawer-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <nav class="drawer-links">
+            <a href="/" class="drawer-link">Inicio</a>
+            <a href="/catalogo" class="drawer-link">Colecciones</a>
+            {% if user %}
+                <a href="/perfil" class="drawer-link">Mi Cuenta</a>
+                {% if user.rol == 'admin' %}
+                    <a href="/admin/dashboard" class="drawer-link admin-tag"><i class="fa-solid fa-screwdriver-wrench"></i> Admin Panel</a>
+                {% endif %}
+                <a href="/auth/logout" class="drawer-link drawer-logout">Cerrar Sesión</a>
+            {% else %}
+                <a href="/auth/login" class="drawer-link drawer-login">Iniciar Sesión</a>
+            {% endif %}
+        </nav>
+    </div>
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Pie de Página -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h2 class="brand-logo">TRIBU</h2>
+                <p class="footer-tagline">Ropa de estilo urbano unisex. Nacida en 2023.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h3>Colecciones</h3>
+                <a href="/catalogo?categoria=hoodies">Hoodies</a>
+                <a href="/catalogo?categoria=chaquetas">Chaquetas</a>
+                <a href="/catalogo?categoria=camisetas">Camisetas</a>
+                <a href="/catalogo?categoria=gorras">Gorras</a>
+            </div>
+            
+            <div class="footer-support">
+                <h3>Envíos y Pago</h3>
+                <p><i class="fa-solid fa-truck"></i> Envíos a toda Colombia</p>
+                <p><i class="fa-solid fa-credit-card"></i> Paga con Wompi (Tarjeta, PSE, Nequi)</p>
+                <p><i class="fa-solid fa-shield-halved"></i> Transacción 100% segura</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 TRIBU STORE. Todos los derechos reservados. Hecho en Colombia.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts de la tienda -->
+    <script src="{{ url_for('static', path='/js/tribu.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

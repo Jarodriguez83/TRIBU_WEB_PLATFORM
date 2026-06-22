@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}TRIBU | Streetwear Store Colombia{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <span class="hero-badge animate-fade">EDICIÓN LIMITADA 2026</span>
+        <h1 class="hero-title animate-slide-up">URBAN REVOLUTION</h1>
+        <p class="hero-subtitle animate-slide-up-delayed">Ropa de estilo urbano y unisex para quienes rompen los esquemas. Nacidos en el 2023.</p>
+        <div class="hero-buttons animate-fade-delayed">
+            <a href="/catalogo" class="btn btn-primary btn-glow">Ver Colección Completa</a>
+            <a href="#manifiesto" class="btn btn-secondary">El Manifiesto</a>
+        </div>
+    </div>
+</section>
+
+<!-- Categorías Destacadas -->
+<section class="section categories-section">
+    <div class="container">
+        <h2 class="section-title">Nuestras Prendas</h2>
+        <div class="categories-grid">
+            <a href="/catalogo?categoria=hoodies" class="category-card">
+                <div class="category-card-bg" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%), url('https://images.unsplash.com/photo-1556821840-3a63f95609a7?q=80&w=400&auto=format&fit=crop');"></div>
+                <div class="category-card-content">
+                    <h3>Hoodies</h3>
+                </div>
+            </a>
+            <a href="/catalogo?categoria=chaquetas" class="category-card">
+                <div class="category-card-bg" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%), url('https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=400&auto=format&fit=crop');"></div>
+                <div class="category-card-content">
+                    <h3>Chaquetas</h3>
+                </div>
+            </a>
+            <a href="/catalogo?categoria=camisetas" class="category-card">
+                <div class="category-card-bg" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%), url('https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=400&auto=format&fit=crop');"></div>
+                <div class="category-card-content">
+                    <h3>Camisetas</h3>
+                </div>
+            </a>
+            <a href="/catalogo?categoria=gorras" class="category-card">
+                <div class="category-card-bg" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%), url('https://images.unsplash.com/photo-1588850561407-ed78c282e89b?q=80&w=400&auto=format&fit=crop');"></div>
+                <div class="category-card-content">
+                    <h3>Gorras</h3>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Última Colección / Productos Recientes -->
+<section class="section latest-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Última Colección</h2>
+            <a href="/catalogo" class="link-arrow">Ver todos los productos <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        
+        <div class="products-grid">
+            {% if productos %}
+                {% for producto in productos %}
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <span class="product-tag">NUEVO</span>
+                            <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="product-image" loading="lazy">
+                            <div class="product-overlay">
+                                <a href="/producto/{{ producto.id }}" class="btn btn-primary">Ver Prenda</a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-category">{{ producto.categoria|capitalize }}</span>
+                            <h3 class="product-title"><a href="/producto/{{ producto.id }}">{{ producto.nombre }}</a></h3>
+                            <div class="product-price-row">
+                                <span class="product-price">${{ "{:,.0f}".format(producto.precio) }} COP</span>
+                            </div>
+                            <div class="product-sizes">
+                                {% for talla in producto.tallas %}
+                                    <span class="size-badge">{{ talla }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty-message">No hay productos destacados en este momento. ¡Pronto subiremos la nueva colección!</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Manifiesto -->
+<section class="section manifesto-section" id="manifiesto">
+    <div class="container">
+        <div class="manifesto-card glass-panel">
+            <span class="manifesto-tag">DESDE 2023</span>
+            <h2>EL MANIFIESTO DE LA TRIBU</h2>
+            <p class="manifesto-text">
+                No somos solo ropa. Somos una identidad. TRIBU nace en el año 2023 en las calles, de la necesidad de expresarse sin etiquetas de género, sin limitaciones. Diseñamos prendas unisex de corte urbano y holgado, pensadas para resistir el día a día y proyectar tu verdadero ser en cualquier lugar del asfalto.
+            </p>
+            <p class="manifesto-text">
+                Cada costura de nuestros hoodies, camisetas y chalecos representa un eslabón de esta comunidad. Únete al movimiento, únete a la Tribu.
+            </p>
+            <div class="manifesto-signature">TRIBU CREW</div>
+        </div>
+    </div>
+</section>
+{% endblock %}

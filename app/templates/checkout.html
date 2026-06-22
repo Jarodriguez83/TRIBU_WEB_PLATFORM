@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section checkout-section">
+    <div class="container">
+        <h1 class="checkout-title">ENVÍO Y PAGO</h1>
+
+        <div class="checkout-grid">
+            <!-- Formulario de Envío (Izquierda) -->
+            <div class="checkout-form-container glass-panel">
+                <h3>Dirección de Entrega (Colombia)</h3>
+                <form action="/checkout" method="post" id="checkout-form">
+                    <!-- Nombre y Teléfono -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo *</label>
+                            <input type="text" id="nombre" name="nombre" value="{{ user.nombre or '' }}" required placeholder="Ej: Juan Pérez">
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono / Celular *</label>
+                            <input type="tel" id="telefono" name="telefono" value="{{ user.telefono or '' }}" required placeholder="Ej: 3001234567">
+                        </div>
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="form-group">
+                        <label for="direccion">Dirección de Envío *</label>
+                        <input type="text" id="direccion" name="direccion" value="{{ user.direccion or '' }}" required placeholder="Ej: Calle 45 # 10-20 Apto 301">
+                    </div>
+
+                    <!-- Ubicación en Colombia -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="departamento">Departamento *</label>
+                            <select id="departamento" name="departamento" required>
+                                <option value="" disabled selected>Selecciona un departamento</option>
+                                {% for depto, info in departamentos.items() %}
+                                    <option value="{{ depto }}" data-envio="{{ info.envio }}">{{ depto }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad *</label>
+                            <select id="ciudad" name="ciudad" required disabled>
+                                <option value="" disabled selected>Selecciona un departamento primero</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Input Oculto para la Data del Carrito -->
+                    <input type="hidden" name="cart_data" id="cart-data-input">
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-glow btn-block" id="btn-submit-order">
+                            Proceder al Pago <i class="fa-solid fa-credit-card"></i>
+                        </button>
+                        <a href="/carrito" class="btn btn-secondary btn-block">Volver al Carrito</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Resumen de Pedido (Derecha) -->
+            <div class="checkout-summary-container">
+                <div class="summary-box glass-panel">
+                    <h3>RESUMEN DEL PEDIDO</h3>
+                    
+                    <!-- Lista de productos -->
+                    <div class="checkout-products-list" id="checkout-products-list">
+                        <!-- Renderizado por JS -->
+                    </div>
+
+                    <div class="summary-divider"></div>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span id="checkout-subtotal">$0 COP</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Costo de Envío:</span>
+                        <span id="checkout-shipping">$0 COP</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Total a Pagar:</span>
+                        <span id="checkout-total">$0 COP</span>
+                    </div>
+
+                    <div class="wompi-trust-badge">
+                        <i class="fa-solid fa-lock"></i>
+                        <div>
+                            <strong>Pago Procesado por Wompi</strong>
+                            <p>Tus transacciones se procesan de manera segura bajo encriptación SSL en Colombia.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Script de Datos Geográficos de Colombia para Cargar Ciudades Dinámicamente -->
+<script>
+    // Pasar diccionario de departamentos y ciudades de Python a JS de forma segura
+    const DEPTOS_DATA = {
+        {% for depto, info in departamentos.items() %}
+            "{{ depto }}": {
+                "ciudades": {{ info.ciudades|tojson }},
+                "envio": {{ info.envio }}
+            },
+        {% endfor %}
+    };
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Catálogo Completo | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section catalog-header-section">
+    <div class="container">
+        <h1 class="catalog-title">CATÁLOGO DE PRODUCTOS</h1>
+        <p class="catalog-subtitle">Explora nuestra colección urbana unisex de alto nivel.</p>
+    </div>
+</section>
+
+<section class="section catalog-body-section">
+    <div class="container">
+        <!-- Panel de Filtros -->
+        <div class="filter-panel glass-panel">
+            <form action="/catalogo" method="get" class="filter-form">
+                <!-- Búsqueda -->
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" name="search" placeholder="Buscar hoodies, chaquetas..." value="{{ search or '' }}">
+                </div>
+                
+                <!-- Categorías -->
+                <div class="category-filters">
+                    <a href="/catalogo" class="filter-tag {% if not categoria_activa %}active{% endif %}">Todos</a>
+                    <a href="/catalogo?categoria=hoodies" class="filter-tag {% if categoria_activa == 'hoodies' %}active{% endif %}">Hoodies</a>
+                    <a href="/catalogo?categoria=chaquetas" class="filter-tag {% if categoria_activa == 'chaquetas' %}active{% endif %}">Chaquetas</a>
+                    <a href="/catalogo?categoria=camisetas" class="filter-tag {% if categoria_activa == 'camisetas' %}active{% endif %}">Camisetas</a>
+                    <a href="/catalogo?categoria=gorras" class="filter-tag {% if categoria_activa == 'gorras' %}active{% endif %}">Gorras</a>
+                    <a href="/catalogo?categoria=buzos" class="filter-tag {% if categoria_activa == 'buzos' %}active{% endif %}">Buzos</a>
+                    <a href="/catalogo?categoria=chalecos" class="filter-tag {% if categoria_activa == 'chalecos' %}active{% endif %}">Chalecos</a>
+                </div>
+                
+                {% if search or categoria_activa %}
+                    <a href="/catalogo" class="btn-clear-filters"><i class="fa-solid fa-xmark"></i> Limpiar filtros</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        <!-- Grid de Productos -->
+        <div class="products-grid">
+            {% if productos %}
+                {% for producto in productos %}
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            {% if producto.stock <= 0 %}
+                                <span class="product-tag out-of-stock">AGOTADO</span>
+                            {% elif producto.stock < 5 %}
+                                <span class="product-tag low-stock">ÚLTIMAS UNIDADES</span>
+                            {% endif %}
+                            <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="product-image" loading="lazy">
+                            <div class="product-overlay">
+                                <a href="/producto/{{ producto.id }}" class="btn btn-primary">Ver Detalle</a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-category">{{ producto.categoria|capitalize }}</span>
+                            <h3 class="product-title"><a href="/producto/{{ producto.id }}">{{ producto.nombre }}</a></h3>
+                            <div class="product-price-row">
+                                <span class="product-price">${{ "{:,.0f}".format(producto.precio) }} COP</span>
+                            </div>
+                            <div class="product-sizes">
+                                {% for talla in producto.tallas %}
+                                    <span class="size-badge">{{ talla }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fa-solid fa-box-open"></i>
+                    <h3>No encontramos productos</h3>
+                    <p>Prueba ajustando los filtros de búsqueda o categoría.</p>
+                    <a href="/catalogo" class="btn btn-primary">Ver Todo</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}{{ producto.nombre }} | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section product-detail-section">
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="/">Inicio</a> <i class="fa-solid fa-chevron-right"></i> 
+            <a href="/catalogo">Catálogo</a> <i class="fa-solid fa-chevron-right"></i> 
+            <a href="/catalogo?categoria={{ producto.categoria }}">{{ producto.categoria|capitalize }}</a> <i class="fa-solid fa-chevron-right"></i>
+            <span class="active">{{ producto.nombre }}</span>
+        </div>
+
+        <div class="product-detail-grid">
+            <!-- Galería de Imagen (Izquierda) -->
+            <div class="product-detail-gallery">
+                <div class="main-image-wrapper glass-panel">
+                    <img id="main-product-image" src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="main-product-image">
+                </div>
+            </div>
+
+            <!-- Información de Compra (Derecha) -->
+            <div class="product-detail-info">
+                <span class="detail-category">{{ producto.categoria|upper }}</span>
+                <h1 class="detail-title">{{ producto.nombre|upper }}</h1>
+                
+                <div class="detail-price-box">
+                    <span class="detail-price" id="detail-price" data-price="{{ producto.precio }}">${{ "{:,.0f}".format(producto.precio) }} COP</span>
+                    {% if producto.stock > 0 %}
+                        <span class="badge badge-success">En Stock</span>
+                    {% else %}
+                        <span class="badge badge-danger">Agotado</span>
+                    {% endif %}
+                </div>
+
+                <p class="detail-description">{{ producto.descripcion }}</p>
+
+                {% if producto.stock > 0 %}
+                    <!-- Selector de Tallas -->
+                    <div class="detail-option-group">
+                        <label class="option-label">Selecciona tu talla:</label>
+                        <div class="size-selector-grid">
+                            {% for talla in producto.tallas %}
+                                <div class="size-option">
+                                    <input type="radio" name="talla" id="talla-{{ talla }}" value="{{ talla }}">
+                                    <label for="talla-{{ talla }}">{{ talla }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <span class="error-text" id="size-error" style="display: none;"><i class="fa-solid fa-circle-exclamation"></i> Por favor selecciona una talla</span>
+                    </div>
+
+                    <!-- Selector de Cantidad -->
+                    <div class="detail-option-group">
+                        <label class="option-label">Cantidad:</label>
+                        <div class="quantity-selector">
+                            <button type="button" class="qty-btn" id="qty-minus"><i class="fa-solid fa-minus"></i></button>
+                            <input type="number" id="qty-input" value="1" min="1" max="{{ producto.stock }}" readonly>
+                            <button type="button" class="qty-btn" id="qty-plus"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Agregar al Carrito -->
+                    <div class="detail-actions">
+                        <button class="btn btn-primary btn-glow btn-add-to-cart" id="btn-add-cart"
+                                data-id="{{ producto.id }}"
+                                data-nombre="{{ producto.nombre }}"
+                                data-imagen="{{ producto.imagen_url }}">
+                            <i class="fa-solid fa-bag-shopping"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="detail-actions">
+                        <button class="btn btn-secondary" disabled>Prenda Agotada</button>
+                    </div>
+                {% endif %}
+
+                <!-- Detalles de la marca/material -->
+                <div class="product-features-accordion glass-panel">
+                    <div class="accordion-item">
+                        <h4><i class="fa-solid fa-universal-access"></i> Fit Unisex</h4>
+                        <p>Diseño de corte holgado (oversized) ideal para cualquier género. Elige tu talla habitual para un fit relajado o una talla menos para un fit más ajustado.</p>
+                    </div>
+                    <div class="accordion-item">
+                        <h4><i class="fa-solid fa-scissors"></i> Materiales Premium</h4>
+                        <p>Confeccionado en algodón de alto gramaje (Heavyweight Cotton) para mayor durabilidad, suavidad y caída estructurada. Costuras reforzadas.</p>
+                    </div>
+                    <div class="accordion-item">
+                        <h4><i class="fa-solid fa-location-dot"></i> Envío Nacional</h4>
+                        <p>Hecho en Colombia. Envío garantizado a nivel nacional a través de empresas transportadoras reconocidas. Paga de forma segura al finalizar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Productos Relacionados -->
+<section class="section related-products-section">
+    <div class="container">
+        <h2 class="section-title">Prendas Relacionadas</h2>
+        <div class="products-grid">
+            {% if relacionados %}
+                {% for prod in relacionados %}
+                    <div class="product-card">
+                        <div class="product-image-container">
+                            <img src="{{ prod.imagen_url }}" alt="{{ prod.nombre }}" class="product-image" loading="lazy">
+                            <div class="product-overlay">
+                                <a href="/producto/{{ prod.id }}" class="btn btn-primary">Ver Prenda</a>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <span class="product-category">{{ prod.categoria|capitalize }}</span>
+                            <h3 class="product-title"><a href="/producto/{{ prod.id }}">{{ prod.nombre }}</a></h3>
+                            <div class="product-price-row">
+                                <span class="product-price">${{ "{:,.0f}".format(prod.precio) }} COP</span>
+                            </div>
+                            <div class="product-sizes">
+                                {% for t in prod.tallas %}
+                                    <span class="size-badge">{{ t }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="empty-message">No se encontraron otras prendas en esta categoría.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section profile-section">
+    <div class="container">
+        <h1 class="profile-title">MI CUENTA</h1>
+        
+        <div class="profile-grid">
+            <!-- Datos de Usuario (Izquierda) -->
+            <div class="profile-sidebar glass-panel">
+                <div class="profile-header text-center">
+                    <div class="profile-avatar">
+                        <i class="fa-solid fa-user-ninja"></i>
+                    </div>
+                    <h2>{{ user.nombre }}</h2>
+                    <span class="badge badge-primary">{{ user.rol|upper }}</span>
+                </div>
+                
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <span class="label">Correo Electrónico:</span>
+                        <span class="value">{{ user.email }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Teléfono:</span>
+                        <span class="value">{{ user.telefono or 'No registrado' }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Dirección predeterminada:</span>
+                        <span class="value">{{ user.direccion or 'No registrada' }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Ubicación:</span>
+                        <span class="value">
+                            {% if user.ciudad %}
+                                {{ user.ciudad }} - {{ user.departamento }}
+                            {% else %}
+                                No registrada
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historial de Pedidos (Derecha) -->
+            <div class="profile-orders-container glass-panel">
+                <h3>Historial de Pedidos</h3>
+                
+                {% if pedidos %}
+                    <div class="orders-list">
+                        {% for pedido in pedidos %}
+                            <div class="order-card">
+                                <div class="order-card-header">
+                                    <div>
+                                        <span class="order-ref">Ref: {{ pedido.referencia_wompi }}</span>
+                                        <span class="order-date">{{ pedido.fecha_creacion.strftime('%d/%m/%Y %I:%M %p') }}</span>
+                                    </div>
+                                    <span class="badge {% if pedido.estado == 'pagado' %}badge-success{% elif pedido.estado == 'pendiente' %}badge-warning{% else %}badge-danger{% endif %}">
+                                        {{ pedido.estado|upper }}
+                                    </span>
+                                </div>
+                                
+                                <div class="order-card-body">
+                                    <!-- Listado de items -->
+                                    <ul class="order-items-list">
+                                        {% for detalle in pedido.detalles %}
+                                            <li>
+                                                <span>{{ detalle.producto.nombre }} (Talla: {{ detalle.talla }})</span>
+                                                <span>x{{ detalle.cantidad }} — ${{ "{:,.0f}".format(detalle.precio_unitario) }} COP</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                
+                                <div class="order-card-footer">
+                                    <span>Envío: ${{ "{:,.0f}".format(pedido.costo_envio) }} COP</span>
+                                    <span class="order-total">Total: ${{ "{:,.0f}".format(pedido.total) }} COP</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fa-solid fa-box-open"></i>
+                        <h4>Aún no has realizado pedidos</h4>
+                        <p>Cuando compres tus prendas urbanas, verás el estado de tus envíos aquí.</p>
+                        <a href="/catalogo" class="btn btn-primary">Ver Catálogo</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

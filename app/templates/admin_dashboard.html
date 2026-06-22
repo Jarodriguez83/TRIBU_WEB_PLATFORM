@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section admin-section">
+    <div class="container">
+        <div class="admin-header-row">
+            <h1>PANEL DE ADMINISTRACIÓN</h1>
+            <a href="/admin/productos/nuevo" class="btn btn-primary btn-glow"><i class="fa-solid fa-plus"></i> Nuevo Producto</a>
+        </div>
+
+        <div class="admin-grid">
+            <!-- Pedidos Recibidos (Fila Superior Completa) -->
+            <div class="admin-card glass-panel">
+                <h3>PEDIDOS DE LA TIENDA</h3>
+                {% if pedidos %}
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Referencia Wompi</th>
+                                    <th>Cliente</th>
+                                    <th>Ciudad / Dpto</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Tracking ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pedido in pedidos %}
+                                    <tr>
+                                        <td>{{ pedido.fecha_creacion.strftime('%d/%m/%Y') }}</td>
+                                        <td><code>{{ pedido.referencia_wompi }}</code></td>
+                                        <td>{{ pedido.usuario.nombre }}</td>
+                                        <td>{{ pedido.ciudad }} / {{ pedido.departamento }}</td>
+                                        <td>${{ "{:,.0f}".format(pedido.total) }} COP</td>
+                                        <td>
+                                            <span class="badge {% if pedido.estado == 'pagado' %}badge-success{% elif pedido.estado == 'pendiente' %}badge-warning{% else %}badge-danger{% endif %}">
+                                                {{ pedido.estado|upper }}
+                                            </span>
+                                        </td>
+                                        <td>{{ pedido.tracking_id or 'Pendiente' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty-message">No se han registrado pedidos en la tienda aún.</p>
+                {% endif %}
+            </div>
+
+            <!-- Listado de Productos -->
+            <div class="admin-card glass-panel" style="margin-top: 2rem;">
+                <h3>PRODUCTOS EN CATÁLOGO</h3>
+                {% if productos %}
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Tallas</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for producto in productos %}
+                                    <tr>
+                                        <td><img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="admin-product-thumb"></td>
+                                        <td><strong>{{ producto.nombre }}</strong></td>
+                                        <td>{{ producto.categoria|capitalize }}</td>
+                                        <td>${{ "{:,.0f}".format(producto.precio) }} COP</td>
+                                        <td>
+                                            <span class="{% if producto.stock <= 0 %}text-danger{% elif producto.stock < 5 %}text-warning{% endif %}">
+                                                {{ producto.stock }} unds
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% for t in producto.tallas %}
+                                                <span class="size-badge">{{ t }}</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <span class="badge {% if producto.activo %}badge-success{% else %}badge-danger{% endif %}">
+                                                {% if producto.activo %}Activo{% else %}Inactivo{% endif %}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty-message">No hay productos creados en el catálogo.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

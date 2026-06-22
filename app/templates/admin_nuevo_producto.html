@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Producto | Admin | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section admin-section">
+    <div class="container">
+        <div class="auth-card glass-panel register-card animate-fade">
+            <div class="auth-header">
+                <span class="auth-brand">ADMIN</span>
+                <h2>REGISTRAR PRENDA</h2>
+                <p>Agrega una nueva prenda de ropa de estilo urbano al catálogo.</p>
+            </div>
+
+            {% if error %}
+                <div class="alert alert-danger">
+                    <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}
+                </div>
+            {% endif %}
+
+            <form action="/admin/productos/nuevo" method="post" class="auth-form">
+                <!-- Nombre y Categoría -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre">Nombre de la Prenda *</label>
+                        <input type="text" id="nombre" name="nombre" required placeholder="Ej: Hoodie Oversized Tribu">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoría *</label>
+                        <select id="categoria" name="categoria" required>
+                            <option value="hoodies">Hoodies</option>
+                            <option value="chaquetas">Chaquetas</option>
+                            <option value="camisetas">Camisetas</option>
+                            <option value="gorras">Gorras</option>
+                            <option value="buzos">Buzos</option>
+                            <option value="chalecos">Chalecos</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="form-group">
+                    <label for="descripcion">Descripción de la Prenda *</label>
+                    <textarea id="descripcion" name="descripcion" required placeholder="Describe los materiales, el corte, y el fit..." rows="3" style="width:100%; background:var(--input-bg); border:1px solid var(--border-color); color:var(--text-color); padding:0.8rem; border-radius:8px; font-family:'Inter', sans-serif; resize:none;"></textarea>
+                </div>
+
+                <!-- Precio y Stock -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="precio">Precio (COP) *</label>
+                        <input type="number" id="precio" name="precio" required placeholder="Ej: 120000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Unidades Disponibles *</label>
+                        <input type="number" id="stock" name="stock" required placeholder="Ej: 50" min="0">
+                    </div>
+                </div>
+
+                <!-- Imagen y Tallas -->
+                <div class="form-group">
+                    <label for="imagen_url">URL de Imagen (Unsplash u otra)</label>
+                    <input type="url" id="imagen_url" name="imagen_url" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+
+                <div class="form-group">
+                    <label for="tallas_raw">Tallas Disponibles (Separadas por Comas) *</label>
+                    <input type="text" id="tallas_raw" name="tallas_raw" required placeholder="Ej: S, M, L, XL" value="S, M, L, XL">
+                    <small style="color:var(--text-muted); display:block; margin-top:0.3rem;">Ingresa las tallas separándolas por comas.</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-glow">Publicar Prenda</button>
+                <a href="/admin/dashboard" class="btn btn-secondary btn-block">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

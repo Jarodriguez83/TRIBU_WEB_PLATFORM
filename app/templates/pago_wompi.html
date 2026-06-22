@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Pagar Pedido | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section payment-redirect-section">
+    <div class="container">
+        <div class="payment-card glass-panel text-center">
+            <div class="payment-icon">
+                <i class="fa-solid fa-file-invoice-dollar animate-bounce"></i>
+            </div>
+            
+            <h2>¡PEDIDO REGISTRADO!</h2>
+            <p class="payment-intro">Hemos reservado tus prendas temporalmente. Tu pedido está en estado **pendiente** de pago.</p>
+            
+            <div class="payment-details-box">
+                <div class="detail-row">
+                    <span>Referencia del Pedido:</span>
+                    <strong>{{ referencia }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Total a Pagar (COP):</span>
+                    <strong class="text-neon">${{ "{:,.0f}".format(total) }} COP</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Cliente:</span>
+                    <span>{{ nombre_usuario }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Email:</span>
+                    <span>{{ email_usuario }}</span>
+                </div>
+            </div>
+            
+            <div class="payment-widget-container">
+                <p>Haz clic en el siguiente botón para abrir la pasarela de pagos de Wompi y completar la compra con PSE, Nequi, Tarjeta o Bancolombia.</p>
+                
+                <!-- Integración oficial del Widget de Wompi (Modo Botón) -->
+                <form>
+                    <script 
+                        src="https://checkout.wompi.co/widget.js" 
+                        data-render="button" 
+                        data-public-key="{{ wompi_public_key }}" 
+                        data-currency="COP" 
+                        data-amount-in-cents="{{ total_centavos }}" 
+                        data-reference="{{ referencia }}" 
+                        data-signature:integrity="{{ firma_integridad }}"
+                        data-redirect-url="{{ redirect_url }}"
+                        data-customer-data:email="{{ email_usuario }}"
+                        data-customer-data:full-name="{{ nombre_usuario }}"
+                        data-customer-data:phone-number="{{ telefono_usuario }}">
+                    </script>
+                </form>
+            </div>
+            
+            <div class="payment-notes">
+                <p><i class="fa-solid fa-circle-info"></i> Nota: Al abrir el portal de pagos, no cierres esta pestaña. Al completarse el pago, serás devuelto automáticamente para ver tu comprobante.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Una vez que el usuario llega aquí, significa que su pedido ya fue guardado en base de datos.
+    // Procedemos a vaciar su carrito en el cliente para evitar compras duplicadas.
+    document.addEventListener("DOMContentLoaded", function() {
+        if (typeof localStorage !== 'undefined') {
+            localStorage.removeItem('tribu_cart');
+            updateCartBadge();
+        }
+    });
+</script>
+{% endblock %}

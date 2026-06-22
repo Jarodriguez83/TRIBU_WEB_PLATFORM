@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Comprobante de Pago | TRIBU{% endblock %}
+
+{% block content %}
+<section class="section payment-status-section">
+    <div class="container">
+        <div class="payment-card glass-panel text-center">
+            
+            {% if estado == 'APROBADO' %}
+                <!-- Aprobado -->
+                <div class="status-icon success-color">
+                    <i class="fa-solid fa-circle-check animate-pulse"></i>
+                </div>
+                <h2 class="success-color">¡PAGO APROBADO!</h2>
+                <p class="status-message">Tu transacción ha sido exitosa. Gracias por unirte a la Tribu. Tu pedido se encuentra en preparación para despacho.</p>
+            {% elif estado == 'PENDIENTE' %}
+                <!-- Pendiente -->
+                <div class="status-icon pending-color">
+                    <i class="fa-solid fa-clock animate-pulse"></i>
+                </div>
+                <h2 class="pending-color">PAGO PENDIENTE</h2>
+                <p class="status-message">Tu pago está en proceso de verificación por la entidad bancaria (habitual en PSE o transferencias). Te notificaremos en cuanto se confirme.</p>
+            {% else %}
+                <!-- Fallido / Rechazado / Cancelado -->
+                <div class="status-icon danger-color">
+                    <i class="fa-solid fa-circle-xmark animate-pulse"></i>
+                </div>
+                <h2 class="danger-color">PAGO NO PROCESADO</h2>
+                <p class="status-message">La transacción fue rechazada, cancelada o presentó un fallo con el banco. No se ha realizado ningún cobro.</p>
+            {% endif %}
+            
+            <!-- Detalles de la Transacción -->
+            <div class="payment-details-box text-left">
+                <h3>Detalles de la Transacción</h3>
+                <div class="detail-row">
+                    <span>Referencia del Pedido:</span>
+                    <strong>{{ referencia }}</strong>
+                </div>
+                <div class="detail-row">
+                    <span>ID de Transacción Wompi:</span>
+                    <span class="text-muted">{{ transaccion_id }}</span>
+                </div>
+                <div class="detail-row">
+                    <span>Monto Transado:</span>
+                    <strong>${{ "{:,.0f}".format(monto) }} COP</strong>
+                </div>
+                <div class="detail-row">
+                    <span>Estado del Pago:</span>
+                    <strong class="{% if estado == 'APROBADO' %}success-color{% elif estado == 'PENDIENTE' %}pending-color{% else %}danger-color{% endif %}">{{ estado }}</strong>
+                </div>
+                {% if pedido %}
+                <div class="detail-row">
+                    <span>Dirección de Envío:</span>
+                    <span>{{ pedido.direccion_envio }}, {{ pedido.ciudad }} - {{ pedido.departamento }}</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="payment-actions">
+                {% if estado == 'APROBADO' or estado == 'PENDIENTE' %}
+                    <a href="/perfil" class="btn btn-primary">Ir a mis pedidos</a>
+                    <a href="/catalogo" class="btn btn-secondary">Seguir Comprando</a>
+                {% else %}
+                    <a href="/catalogo" class="btn btn-primary">Reintentar Compra</a>
+                    <a href="/" class="btn btn-secondary">Volver al Inicio</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
