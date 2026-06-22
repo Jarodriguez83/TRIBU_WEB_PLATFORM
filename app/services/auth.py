@@ -1,23 +1,24 @@
+import bcrypt
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import jwt, JWTError
-from passlib.context import CryptContext
 from fastapi import Request, Depends, HTTPException, status
 from sqlmodel import Session
 from app.config import settings
 from app.database.database import get_session
 from app.models.models import Usuario
 
-# Contexto de hashing para contraseñas usando bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 def hash_password(password: str) -> str:
-    """Hashea una contraseña en texto plano."""
-    return pwd_context.hash(password)
+    """Hashea una contraseña en texto plano usando bcrypt directamente."""
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password.encode("utf-8"), salt).decode("utf-8")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verifica una contraseña en texto plano contra su hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Verifica una contraseña en texto plano contra su hash usando bcrypt."""
+    try:
+        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed_password.encode("utf-8"))
+    except Exception:
+        return False
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     """Genera un token de acceso JWT."""
