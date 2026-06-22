@@ -69,8 +69,8 @@ class Settings(BaseSettings):
     @field_validator("DATABASE_URL")
     @classmethod
     def validar_database_url(cls, v: str) -> str:
-        if not v.startswith("postgresql"):
-            raise ValueError("DATABASE_URL DEBE SER UNA URL DE POSTGRESQL VÁLIDA.")
+        if not v.startswith("postgresql") and not v.startswith("sqlite"):
+            raise ValueError("DATABASE_URL DEBE SER UNA URL DE POSTGRESQL O SQLITE VÁLIDA.")
         return v
     
     @field_validator("WOMPI_BASE_URL")
