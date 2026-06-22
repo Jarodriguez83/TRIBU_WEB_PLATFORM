@@ -2,12 +2,17 @@
 from sqlmodel import SQLModel, create_engine, Session
 from app.config import settings
 
-# Crear motor de base de datos (PostgreSQL de Supabase o local)
+# Crear motor de base de datos (PostgreSQL de Supabase, local, o SQLite)
 # echo=True en desarrollo para auditar las queries generadas por SQLModel
+connect_args = {}
+if settings.DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
+
 engine = create_engine(
     settings.DATABASE_URL,
     echo=settings.es_desarrollo,
-    pool_pre_ping=True  # Verifica la conexión antes de realizar operaciones
+    pool_pre_ping=not settings.DATABASE_URL.startswith("sqlite"),
+    connect_args=connect_args
 )
 
 def init_db():
